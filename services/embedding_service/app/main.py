@@ -5,6 +5,7 @@ from app.utils.logger import get_logger
 
 logger = get_logger(__name__)
 
+# the parameters will show in the swagger UI
 app = FastAPI(
     title="Local Embedding Service",
     description="Embed text locally using SentenceTransformers",
