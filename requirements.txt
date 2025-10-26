@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+pydantic>=2.0
+sentence-transformers # this will also install torch, transformers, sklearn, huggingface-hub, sklearn...
+pyyaml
+ipykernel
+structlog
+rich # to color the logs in terminal
