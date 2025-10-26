@@ -1,0 +1,14 @@
+volumes:
+  rag-qdrant-storage:
+    external: true
+
+services:
+  qdrant: # custom service name for the proj
+    image: qdrant/qdrant:v1.15.3
+    container_name: rag-qdrant
+    ports:
+      - "6333:6333" # for REST API
+      - "6334:6334" # for GRPC API
+    volumes:
+      - rag-qdrant-storage:/qdrant/storage # Docker will create the volume if not exist
+
