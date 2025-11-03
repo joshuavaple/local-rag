@@ -6,3 +6,5 @@ pyyaml
 ipykernel
 structlog
 rich # to color the logs in terminal
+qdrant_client
+mlflow>=3.0.1

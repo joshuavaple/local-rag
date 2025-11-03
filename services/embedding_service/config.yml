@@ -1,5 +1,9 @@
 model:
-  name: "sentence-transformers/all-MiniLM-L12-v2"
+  # name: "sentence-transformers/all-MiniLM-L12-v2"
+  name: "all-MiniLM-L12-v2"
+  alias: "champion"
+  experiment_name: "deployment-ready-embedding-model"
+  mlflow_tracking_uri: "http://localhost:5000/"
   # device: "cuda"   # or "cpu", TODO: make it dynamic based on runtime
 server:
   host: "0.0.0.0"
