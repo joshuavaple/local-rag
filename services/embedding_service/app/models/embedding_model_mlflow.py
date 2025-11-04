@@ -72,6 +72,7 @@ class EmbeddingModel:
             client.set_registered_model_alias(
                 name=model_name, alias=alias, version=latest_version.version
             )
+            model = mlflow.sentence_transformers.load_model(model_uri)
 
         self.model = model
         self.model_name = model_name
