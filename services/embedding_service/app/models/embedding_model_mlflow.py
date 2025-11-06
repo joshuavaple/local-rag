@@ -4,7 +4,7 @@ from pathlib import Path
 from sentence_transformers import SentenceTransformer
 import torch
 from app.utils.logger import get_logger
-from app.utils.mlflow_utils import log_deployment_ready_model
+from app.utils.mlflow_utils import log_deployment_ready_model, check_existing_experiment
 import mlflow
 from mlflow import MlflowClient
 
@@ -61,8 +61,9 @@ class EmbeddingModel:
             logger.warning(
                 f"Embeding model URI {model_uri} not found. Download, log and register..."
             )
+            check_existing_experiment(experiment_name=experiment_name)
             model_info = log_deployment_ready_model(
-                experiment_name=experiment_name, model_name=model_name, alias=alias
+                experiment_name=experiment_name, model_name=model_name
             )
 
             mlflow.register_model(model_uri=model_info.model_uri, name=model_name)
