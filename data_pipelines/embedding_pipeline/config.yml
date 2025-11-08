@@ -8,5 +8,5 @@ embedding:
   embedding_svc_url: "http://127.0.0.1:8000/embed"
   vector_size: 384
 data:
-  path: "./data/corpus.json"
+  path: "./data/multihop_rag/corpus.json"
   
