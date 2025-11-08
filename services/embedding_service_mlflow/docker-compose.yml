@@ -1,0 +1,8 @@
+version: '3.8'
+
+services:
+  embedding:
+    image: embedding_service:latest
+    container_name: embedding-service-mlflow
+    ports:
+      - "5002:8080"
