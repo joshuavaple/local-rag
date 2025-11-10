@@ -1,0 +1,11 @@
+chunking:
+  max_tokens: 256
+  chunk_overlap: 32
+  downstream_llm: "gpt-4o"
+embedding:
+  qdrant_svc_url: "http://localhost:6333"
+  qdrant_collection_name: "wixqa_corpus"
+  embedding_svc_url: "http://127.0.0.1:5002/invocations"
+  vector_size: 384
+data:
+  path: "./data/wixqa/wix_kb_corpus.jsonl"
