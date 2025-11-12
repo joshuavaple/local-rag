@@ -3,9 +3,12 @@ uvicorn
 pydantic>=2.0
 sentence-transformers # this will also install torch, transformers, sklearn, huggingface-hub, sklearn...
 pyyaml
-ipykernel
+ipykernel==6.30.1 # more stable than latest 7+
 structlog
 rich # to color the logs in terminal
 qdrant_client
 mlflow>=3.0.1
 tiktoken
+evidently
+evidently[llm]
+tracely
