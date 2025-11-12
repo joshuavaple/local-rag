@@ -1,0 +1,84 @@
+{
+  "id": "019a7913-19a3-7443-bf47-529b761ca045",
+  "project_id": "019a7912-d104-74f1-8d08-6ab0f3ad54a1",
+  "author_id": "00000000-0000-7000-8000-000000000000",
+  "name": "run-reference-019a7913-1857-7177-91ab-7cca1d86a180",
+  "description": "",
+  "data_definition": {
+    "id_column": null,
+    "timestamp": null,
+    "service_columns": null,
+    "numerical_columns": [
+      "temp",
+      "atemp",
+      "hum",
+      "windspeed",
+      "hr",
+      "weekday",
+      "cnt",
+      "prediction"
+    ],
+    "categorical_columns": [
+      "season",
+      "holiday",
+      "workingday"
+    ],
+    "text_columns": [],
+    "datetime_columns": [],
+    "unknown_columns": [],
+    "list_columns": [],
+    "classification": null,
+    "regression": [
+      {
+        "name": "default",
+        "target": "cnt",
+        "prediction": "prediction"
+      }
+    ],
+    "llm": null,
+    "numerical_descriptors": [],
+    "categorical_descriptors": [],
+    "test_descriptors": null,
+    "ranking": null,
+    "special_columns": []
+  },
+  "source": {
+    "type": "evidently:data_source:FileDataSource",
+    "filter_by": null,
+    "sort_by": null,
+    "project_id": "019a7912-d104-74f1-8d08-6ab0f3ad54a1",
+    "filename": "019a7912-d104-74f1-8d08-6ab0f3ad54a1/datasets/019a7913-19a3-7443-bf47-529b761ca045/data.parquet",
+    "is_tmp": false
+  },
+  "size_bytes": 32452,
+  "row_count": 669,
+  "column_count": 17,
+  "all_columns": [
+    "instant",
+    "season",
+    "yr",
+    "mnth",
+    "hr",
+    "holiday",
+    "weekday",
+    "workingday",
+    "weathersit",
+    "temp",
+    "atemp",
+    "hum",
+    "windspeed",
+    "casual",
+    "registered",
+    "cnt",
+    "prediction"
+  ],
+  "is_draft": false,
+  "draft_params": null,
+  "origin": "file",
+  "metadata": {},
+  "tags": [],
+  "tracing_params": null,
+  "created_at": "2025-11-12T17:18:06.249087",
+  "updated_at": "2025-11-12T17:18:06.249087",
+  "author_name": ""
+}

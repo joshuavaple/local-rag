@@ -38,6 +38,8 @@
 - 5000: mlflow server
 - 5001: mlflow embedding model server (no container, model loaded everytime)
 - 5002: mlflow embedding model server (in container, model preloaded)
-- 5432: postgres
-- 9000: minio
+- 5432: mlflow postgres
+- 9000: mlflow minio
 - 6333: qdrant
+- 5433: evidently postgres
+- 8080: evidently service
