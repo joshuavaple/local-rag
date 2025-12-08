@@ -12,3 +12,8 @@ tiktoken
 evidently
 evidently[llm]
 tracely
+langchain
+langchain-community
+langgraph
+grandalf
+langchain-qdrant
