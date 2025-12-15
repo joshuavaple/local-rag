@@ -1,0 +1,42 @@
+services:
+  rag-vllm-service:
+    image: vllm/vllm-openai:latest
+    container_name: rag-vllm-service
+    ports:
+      - "8001:8000"
+    environment:
+      HF_TOKEN: ${HF_TOKEN}
+      HF_HOME: /models
+    volumes:
+      - ./models:/models
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: [gpu]
+    runtime: nvidia
+    # shm_size: "16g"
+    ipc: host
+    command: >
+      --model ${MODEL_NAME}
+      --max-model-len 40960
+      --disable-log-stats
+      --tensor-parallel-size 1
+      --gpu-memory-utilization 0.9
+      --host 0.0.0.0
+      --port 8000
+  rag-openwebui_vllm-service:
+    image: ghcr.io/open-webui/open-webui:main
+    container_name: rag-openwebui_vllm-service
+    ports:
+      - "3010:8080"
+    environment:
+      - OPENAI_API_BASE_URL=http://rag-vllm-service:8000/v1
+      - OPENAI_API_KEY=none
+    depends_on:
+      - rag-vllm-service
+    volumes:
+      - rag-openwebui_data_vllm:/app/backend/data
+
+volumes:
+  rag-openwebui_data_vllm:
