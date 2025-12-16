@@ -1,0 +1,9 @@
+embedding:
+  qdrant_svc_url: "http://localhost:6333"
+  qdrant_collection_name: "clapqa_corpus"
+  embedding_svc_url: "http://127.0.0.1:5002/invocations"
+  vector_size: 384
+  distance_metric: "COSINE"  # Options: COSINE, DOT, EUCLID, MANHATTAN
+data:
+  dataset_name: "PrimeQA/clapnq_passages"
+  split: "train"
