@@ -1,14 +1,9 @@
-# not a clean code, fix later
-import sys
-
-sys.path.append("../../.")
-
 from qdrant_client import QdrantClient, models
 from qdrant_client.models import Distance, VectorParams
 from pathlib import Path
 import yaml
-from src.utils.logger import get_logger
-from utils.chunking import chunk_text_with_overlap, generate_chunk_id
+from local_rag.utils.logger import get_logger
+from local_rag.core.chunking import chunk_text_with_overlap, generate_chunk_id
 import tiktoken
 import json
 import requests
