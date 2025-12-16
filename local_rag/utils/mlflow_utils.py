@@ -3,6 +3,7 @@ from mlflow import MlflowClient
 from sentence_transformers import SentenceTransformer
 from mlflow.models.signature import infer_signature
 from .logger import get_logger
+import requests
 
 
 logger = get_logger(__name__)
@@ -40,3 +41,19 @@ def check_existing_experiment(experiment_name: str) -> None:
                 f"Found soft-deleted experiment with name {experiment_name}, restoring..."
             )
             client.restore_experiment(exp.experiment_id)
+
+
+def get_mlflow_embeddings(texts, embedding_url):
+    """Get embeddings from the MLflow embedding service"""
+    try:
+        response = requests.post(
+            embedding_url,
+            json={"inputs": texts},
+            # headers={"Content-Type": "application/json"}
+        )
+        response.raise_for_status()
+        embeddings = response.json()["predictions"]
+        return embeddings
+    except requests.exceptions.RequestException as e:
+        logger.error(f"Error getting embeddings: {e}")
+        raise
