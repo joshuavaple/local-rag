@@ -4,65 +4,22 @@ import yaml
 import argparse
 from datasets import load_dataset
 from local_rag.utils.logger import get_logger
+from local_rag.utils.config_utils import load_config
 from local_rag.utils.mlflow_utils import get_mlflow_embeddings
 from local_rag.utils.qdrant_utils import setup_qdrant_client_and_collection
 from local_rag.core.text_cleaning import clean_text
-from local_rag.core.chunking import SentenceTextSplitter
+from local_rag.core.chunking import SentenceTextSplitter, generate_chunk_id
 import time
 
 
 logger = get_logger(__name__)
-
-
-
-def load_config(config_path:str, **overrides:dict) -> dict:
-    """Load configuration from YAML file with optional CLI overrides
-    
-    Args:
-        config_path (str): Path to the YAML configuration file (required)
-        **overrides: CLI argument overrides in dot notation format
-    
-    Returns:
-        dict: Loaded configuration with overrides applied
-    
-    Raises:
-        ValueError: If config_path is None or empty
-        FileNotFoundError: If config file doesn't exist
-    """
-    if config_path is None or config_path == "":
-        raise ValueError("config_path is required and cannot be None or empty")
-    
-    if config_path.endswith(".yml") is False and config_path.endswith(".yaml") is False:
-        raise ValueError("config_path must point to a YAML file with .yml or .yaml extension")
-    
-    config_path = Path(config_path)
-    if not config_path.exists():
-        raise FileNotFoundError(f"Config file not found: {config_path}")
-    
-    with open(config_path, "r") as f:
-        cfg = yaml.safe_load(f)
-    
-    # Apply CLI overrides to nested config
-    for key, value in overrides.items():
-        if value is not None:  # Only override if value was provided
-            keys = key.split('.')
-            current = cfg
-            for k in keys[:-1]:
-                if k not in current:
-                    current[k] = {}
-                current = current[k]
-            current[keys[-1]] = value
-    
-    logger.debug(f"Loaded config from {config_path}: {cfg}")
-    return cfg
-
 
 def parse_args():
     """Parse command line arguments for runtime overrides"""
     parser = argparse.ArgumentParser(description="Embed CLAP-QA corpus into vector database")
     
     # Config file
-    parser.add_argument("--config", type=str, required=True, help="Path to config YAML file")
+    parser.add_argument("--config", type=str, help="Path to config YAML file")
     
     # Service URLs - most likely to be overridden in different environments
     parser.add_argument("--qdrant-url", type=str, 
@@ -92,12 +49,6 @@ def parse_args():
                        help="Dataset split (overrides config)")
        
     return parser.parse_args()
-
-
-
-
-
-
 
 
 def main():
@@ -151,6 +102,7 @@ def main():
     # split texts into sentences
     logger.info("Splitting texts into sentences")
     sentence_splitter = SentenceTextSplitter(keep_separator="end")
+    # note: LangChain uses "Document" to refer to chunk and its metadata, while elswhere we use "document" to refer to the original full text
     documents = []
     for text, title in zip(cleaned_texts, titles):
         docs = sentence_splitter.create_documents(
@@ -170,6 +122,7 @@ def main():
     for i in range(0, len(documents), batch_size):
         batch = documents[i:i+batch_size]
         texts = [doc.page_content for doc in batch]
+        uuids = [generate_chunk_id(doc.page_content) for doc in batch]
         
         logger.info(f"Processing batch {i//batch_size + 1}/{(len(documents) + batch_size - 1)//batch_size}")
         
@@ -178,15 +131,13 @@ def main():
         
         # Prepare points for Qdrant
         points = []
-        for j, (doc, embedding) in enumerate(zip(batch, embeddings)):
-            point_id = i + j
+        for j, (doc, embedding, uuid) in enumerate(zip(batch, embeddings, uuids)):
             points.append(models.PointStruct(
-                id=point_id,
+                id=uuid,
                 vector=embedding,
                 payload={
                     "text": doc.page_content,
-                    "title": doc.metadata.get("title", ""),
-                    "doc_id": point_id
+                    "title": doc.metadata.get("title", "")
                 }
             ))
         
