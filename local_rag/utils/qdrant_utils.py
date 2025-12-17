@@ -20,7 +20,7 @@ def get_qdrant_distance_metric(metric_name: str) -> Distance:
     distance_mapping = {
         "COSINE": Distance.COSINE,
         "DOT": Distance.DOT,
-        "EUCLIDEAN": Distance.EUCLID,
+        "EUCLID": Distance.EUCLID,
         "MANHATTAN": Distance.MANHATTAN
     }
     
