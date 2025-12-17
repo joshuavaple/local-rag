@@ -8,7 +8,7 @@ from local_rag.utils.config_utils import load_config
 from local_rag.utils.mlflow_utils import get_mlflow_embeddings
 from local_rag.utils.qdrant_utils import setup_qdrant_client_and_collection
 from local_rag.core.text_cleaning import clean_text
-from local_rag.core.chunking import SentenceTextSplitter
+from local_rag.core.chunking import SentenceTextSplitter, generate_chunk_id
 import time
 
 
@@ -102,6 +102,7 @@ def main():
     # split texts into sentences
     logger.info("Splitting texts into sentences")
     sentence_splitter = SentenceTextSplitter(keep_separator="end")
+    # note: LangChain uses "Document" to refer to chunk and its metadata, while elswhere we use "document" to refer to the original full text
     documents = []
     for text, title in zip(cleaned_texts, titles):
         docs = sentence_splitter.create_documents(
@@ -121,6 +122,7 @@ def main():
     for i in range(0, len(documents), batch_size):
         batch = documents[i:i+batch_size]
         texts = [doc.page_content for doc in batch]
+        uuids = [generate_chunk_id(doc.page_content) for doc in batch]
         
         logger.info(f"Processing batch {i//batch_size + 1}/{(len(documents) + batch_size - 1)//batch_size}")
         
@@ -129,15 +131,13 @@ def main():
         
         # Prepare points for Qdrant
         points = []
-        for j, (doc, embedding) in enumerate(zip(batch, embeddings)):
-            point_id = i + j
+        for j, (doc, embedding, uuid) in enumerate(zip(batch, embeddings, uuids)):
             points.append(models.PointStruct(
-                id=point_id,
+                id=uuid,
                 vector=embedding,
                 payload={
                     "text": doc.page_content,
-                    "title": doc.metadata.get("title", ""),
-                    "doc_id": point_id
+                    "title": doc.metadata.get("title", "")
                 }
             ))
         
