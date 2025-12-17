@@ -1,8 +1,9 @@
 from pathlib import Path
 import yaml
+from typing import Any
 
 
-def load_config(config_path:str, **overrides) -> dict:
+def load_config(config_path: str, **overrides: Any) -> dict:
     """Load configuration from YAML file with optional CLI overrides
     
     Args:
