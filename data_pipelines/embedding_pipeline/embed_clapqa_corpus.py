@@ -33,7 +33,7 @@ def parse_args():
     parser.add_argument("--vector-size", type=int, 
                        help="Vector size (overrides config)")
     parser.add_argument("--distance-metric", type=str, 
-                       choices=["COSINE", "DOT", "EUCLIDEAN", "MANHATTAN"],
+                       choices=["COSINE", "DOT", "EUCLID", "MANHATTAN"],
                        help="Distance metric for vector similarity (overrides config)")
         
     # Processing parameters
@@ -102,7 +102,7 @@ def main():
     # split texts into sentences
     logger.info("Splitting texts into sentences")
     sentence_splitter = SentenceTextSplitter(keep_separator="end")
-    # note: LangChain uses "Document" to refer to chunk and its metadata, while elswhere we use "document" to refer to the original full text
+    # note: LangChain uses "Document" to refer to chunk and its metadata, while elsewhere we use "document" to refer to the original full text
     documents = []
     for text, title in zip(cleaned_texts, titles):
         docs = sentence_splitter.create_documents(
