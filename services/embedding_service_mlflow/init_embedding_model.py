@@ -1,12 +1,9 @@
-import sys
-sys.path.append("../../.")
-
 import yaml
 from pathlib import Path
 import mlflow
 from mlflow import MlflowClient
-from src.utils.logger import get_logger
-from src.utils.mlflow_utils import log_deployment_ready_model, check_existing_experiment
+from local_rag.utils.logger import get_logger
+from local_rag.utils.mlflow_utils import log_deployment_ready_model, check_existing_experiment
 from sentence_transformers import SentenceTransformer
 from mlflow.models.signature import infer_signature
 
