@@ -12,7 +12,7 @@ import requests
 logger = get_logger(__name__)
 
 
-CONFIG_PATH = Path(__file__).resolve().parents[0] / "config.yml"
+CONFIG_PATH = Path(__file__).resolve().parents[0] / "config_multihop.yml"
 with open(CONFIG_PATH, "r") as f:
     cfg = yaml.safe_load(f)
 
