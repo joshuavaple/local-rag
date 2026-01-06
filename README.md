@@ -31,9 +31,43 @@
     - Reference: https://qdrant.tech/documentation/guides/installation/#docker-and-docker-compose
 
 ## Pipelines
-1. `embedding_pipeline`
-    - `embed_corpus.py`: take the whole copus, chunk all articles by number of tokens, followed by embedding the chunks with the `embedding_service` model endpoint above and upserting in batches to the vector database collection. Check the `config.yml` for relevant parameters like chunk size and overlap.
-    - `data/`: contains the whole copus of the benchmark `MultiHop RAG`
+1. Corpus chunking and embedding
+    - Script location: `embedding_pipeline/embed_clapqa_corpus_langchain.py`
+    - This is the main script to clean, reconstruct the articles from the sentences, chunk by sentences, and embed these chunks inside the corpus.
+    - The script implements the LangChain interface, which greatly reduces the amount of codes required (see `embed_clapqa_corpus.py` for the native Qdrant implementation)
+    - Config is stored in the separate yml file.
+    - Sample usage:
+        - cd to the folder containing this script
+        - run the script with appropriate arguments:
+            - Embedding full corpus: 
+            ```bash
+            python embed_clapqa_corpus_langchain.py \
+                --config config_clapqa_langchain.yml
+            ```
+            - Embedding a subset of 100 rows for testing: 
+            ```bash
+            python embed_clapqa_corpus_langchain.py \
+                --config config_clapqa_langchain.yml \
+                --max-docs 100
+            ```
+        - Optionally, you can override config parameters (but not recommended)
+            ```bash
+            python embed_clapqa_corpus_langchain.py \
+                --config config_clapqa_langchain.yml \
+                --qdrant-url http://new-qdrant-url:6333 \
+                --collection-name new_collection
+            ```
+2. Reset a collection
+    - Script location: `embedding_pipelines/_reset_collection.py`
+    - This must be used with the same config file that was used with the embedding script in #1 abobe.
+    - Sample usage:
+        - cd to the folder containing this script
+        - Run the script with the config file corresponding to the collection you want to reset:
+        ```bash
+        python _reset_collection.py \
+            --config config_clapqa_langchain.yml
+        ```
+
 
 ## Project Architecture
 
