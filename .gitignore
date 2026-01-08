@@ -1,5 +1,10 @@
 # local model cache
 *model_cache/
+*model_dir/
+*models/
+
+# archived folders
+*archive*/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
