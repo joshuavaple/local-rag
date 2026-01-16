@@ -10,10 +10,19 @@ from local_rag.core.chunking import SentenceTextSplitter, generate_chunk_id
 import time
 from langchain_qdrant import QdrantVectorStore
 from local_rag.core.embeddings import CustomEmbeddings
+import os
+from dotenv import load_dotenv
+from huggingface_hub import login
+from pathlib import Path
 
 
 logger = get_logger(__name__)
 
+script_dir = Path(__file__).parent
+env_path = script_dir / "../../.env"
+load_dotenv(env_path)
+HF_TOKEN = os.getenv("HF_TOKEN")
+login(HF_TOKEN)
 
 def parse_args():
     """Parse command line arguments for runtime overrides"""
@@ -38,7 +47,7 @@ def parse_args():
                        help="Distance metric for vector similarity (overrides config)")
         
     # Processing parameters
-    parser.add_argument("--batch-size", type=int, default=32,
+    parser.add_argument("--batch-size", type=int, default=256,
                        help="Batch size for processing")
     parser.add_argument("--max-docs", type=int, 
                        help="Maximum number of documents to process (for testing)")
